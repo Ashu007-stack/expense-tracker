@@ -4,7 +4,7 @@ import os
 from google import genai
 
 from app.agents.llm.base_provider import BaseProvider
-from app.agents.llm.provider_result import ProviderResult
+from app.agents.base.agent_result import AgentResult
 
 
 class GeminiProvider(BaseProvider):
@@ -18,7 +18,7 @@ class GeminiProvider(BaseProvider):
         self,
         title: str,
         description: str,
-    ) -> ProviderResult:
+    ) -> AgentResult:
 
         prompt = f"""
 You are an AI expense categorization assistant.
@@ -63,8 +63,9 @@ Example:
 
         result = json.loads(response.text)
 
-        return ProviderResult(
+        return AgentResult(
             category=result["category"],
             confidence=result["confidence"],
             provider="Gemini",
+            matched_keywords=[],
         )

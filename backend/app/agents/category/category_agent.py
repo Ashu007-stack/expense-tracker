@@ -45,5 +45,6 @@ class CategoryAgent(BaseAgent):
         return AgentResult(
             category=best_category,
             confidence=confidence,
+            provider="agent",
             matched_keywords=matched_keywords,
         )

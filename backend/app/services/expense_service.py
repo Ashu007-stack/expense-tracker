@@ -27,7 +27,7 @@ def create_expense(
         amount=expense.amount,
         category=result.category,
         category_confidence=result.confidence,
-        category_source="agent",
+        category_source=result.provider.lower(),
         description=expense.description,
         expense_date=expense.expense_date,
         owner_id=current_user.id,

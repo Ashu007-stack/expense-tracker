@@ -1,6 +1,6 @@
 import os
 
-from app.agents.llm.providers.gemini_provider import GeminiProvider
+from app.agents.llm.provider.gemini_provider import GeminiProvider
 
 
 class LLMManager:
