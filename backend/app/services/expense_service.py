@@ -43,15 +43,43 @@ def create_expense(
 def get_user_expenses(
     db: Session,
     current_user: User,
+    category: str | None = None,
+    search: str | None = None,
+    page: int = 1,
+    limit: int = 10,
 ):
-    return (
+    query = (
         db.query(Expense)
         .filter(
             Expense.owner_id == current_user.id
         )
+    )
+
+    # Category filter — case-insensitive
+    if category:
+        query = query.filter(
+            Expense.category.ilike(category)
+        )
+
+    # Search title or description — case-insensitive
+    if search:
+        search_term = f"%{search}%"
+
+        query = query.filter(
+            Expense.title.ilike(search_term)
+            | Expense.description.ilike(search_term)
+        )
+
+    # Pagination calculation
+    offset = (page - 1) * limit
+
+    return (
+        query
         .order_by(
             Expense.created_at.desc()
         )
+        .offset(offset)
+        .limit(limit)
         .all()
     )
 

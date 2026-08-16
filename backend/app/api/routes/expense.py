@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
 from app.database.session import get_db
@@ -33,25 +33,34 @@ def create_new_expense(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-
     return create_expense(
         db=db,
         expense=expense,
         current_user=current_user,
     )
 
+
 @router.get(
     "",
     response_model=list[ExpenseResponse],
 )
 def get_expenses(
+    category: str | None = None,
+    search: str | None = None,
+    page: int = Query(1, ge=1, description="Page number, starting from 1"),
+    limit: int = Query(10, ge=1, le=100, description="Items per page, max 100"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     return get_user_expenses(
         db=db,
         current_user=current_user,
+        category=category,
+        search=search,
+        page=page,
+        limit=limit,
     )
+
 
 @router.get(
     "/{expense_id}",
@@ -67,6 +76,7 @@ def get_expense(
         expense_id=expense_id,
         current_user=current_user,
     )
+
 
 @router.put(
     "/{expense_id}",
@@ -84,6 +94,7 @@ def update_existing_expense(
         expense_data=expense,
         current_user=current_user,
     )
+
 
 @router.delete(
     "/{expense_id}",
