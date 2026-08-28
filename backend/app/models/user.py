@@ -1,4 +1,4 @@
-from sqlalchemy import String
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -26,8 +26,32 @@ class User(Base):
         index=True,
     )
 
+    mobile_number: Mapped[str] = mapped_column(
+        String(15),
+        unique=True,
+        index=True,
+    )
+
     hashed_password: Mapped[str] = mapped_column(
         String(255),
+    )
+
+    is_mobile_verified: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+    )
+
+    is_email_verified: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False,
     )
 
     expenses: Mapped[list["Expense"]] = relationship(
